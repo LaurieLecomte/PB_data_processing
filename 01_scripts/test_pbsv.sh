@@ -2,7 +2,7 @@
 
 # Test pbsv using mapped reads from pbmm2
 
-# srun -p medium -c 4 --time=7-00:00 -J pbsv_safoCHIm_2359-21 --mem=20G -o log/pbsv_safoCHIm_2359-21_%j.log /bin/sh 01_scripts/test_pbsv.sh "safoCHIm_2359-21" &
+# srun -p medium -c 8 --time=7-00:00 -J pbsv_safoPUVx_001-21 --mem=20G -o log/pbsv_safoPUVx_001-21_%j.log /bin/sh 01_scripts/test_pbsv.sh "safoPUVx_001-21" &
 
 # VARIABLES
 SAMPLE=$1
@@ -21,8 +21,10 @@ MAPPED_CCS="$ALIGNED_DIR/pbmm2/"$SAMPLE".ccs.bam"
 
 SV_DIR="pbsv_test"
 
-CPU=4
+CPU=8
 
+
+# For untrimmed subreads, mapped with pbmm2
 # Discover signatures of structural variation
 pbsv discover $MAPPED_SUB $SV_DIR/"$SAMPLE".subreads.svsig.gz --log-level WARN
 
@@ -39,18 +41,24 @@ tabix -c '#' -s 3 -b 4 -e 4 $SV_DIR/"$SAMPLE".subreads.svsig.gz
 
 pbsv call $GENOME $SV_DIR/"$SAMPLE".subreads.svsig.gz $SV_DIR/"$SAMPLE".subreads.vcf -j $CPU --log-level WARN
 
+# For trimmed subreads, mapped with pbmm2
+pbsv discover QC/longQC/$SAMPLE/"$SAMPLE".subreads.trimmed.fastq $SV_DIR/"$SAMPLE".subreads.trimmed.svsig.gz --log-level WARN
+
+tabix -c '#' -s 3 -b 4 -e 4 $SV_DIR/"$SAMPLE".subreads.trimmed.svsig.gz
+pbsv call $GENOME $SV_DIR/"$SAMPLE".subreads.trimmed.svsig.gz $SV_DIR/"$SAMPLE".subreads.trimmed.vcf -j $CPU --log-level WARN
+
 # CCS
-#pbsv discover $MAPPED_CCS $SV_DIR/"$SAMPLE".ccs.svsig.gz --log-level INFO -s $SAMPLE
+#pbsv discover $MAPPED_CCS $SV_DIR/"$SAMPLE".ccs.svsig.gz --log-level WARN -s $SAMPLE
 #tabix -c '#' -s 3 -b 4 -e 4 $SV_DIR/"$SAMPLE".ccs.svsig.gz
-#pbsv call $GENOME $SV_DIR/"$SAMPLE".ccs.svsig.gz $SV_DIR/"$SAMPLE".ccs.vcf --ccs -j $CPU --log-level INFO
+#pbsv call $GENOME $SV_DIR/"$SAMPLE".ccs.svsig.gz $SV_DIR/"$SAMPLE".ccs.vcf --ccs -j $CPU --log-level WARN
 
 
 # From winnowmap
-pbsv discover "$ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.bam" $SV_DIR/"$SAMPLE".subreads.win.svsig.gz --log-level INFO -s $SAMPLE
-tabix -c '#' -s 3 -b 4 -e 4 $SV_DIR/"$SAMPLE".subreads.win.svsig.gz
-pbsv call $GENOME $SV_DIR/"$SAMPLE".subreads.win.svsig.gz $SV_DIR/"$SAMPLE".subreads.win.vcf -j $CPU --log-level INFO
+#pbsv discover "$ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.bam" $SV_DIR/"$SAMPLE".subreads.win.svsig.gz --log-level INFO -s $SAMPLE
+#tabix -c '#' -s 3 -b 4 -e 4 $SV_DIR/"$SAMPLE".subreads.win.svsig.gz
+#pbsv call $GENOME $SV_DIR/"$SAMPLE".subreads.win.svsig.gz $SV_DIR/"$SAMPLE".subreads.win.vcf -j $CPU --log-level INFO
 
 
-pbsv discover "$ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.bam" $SV_DIR/"$SAMPLE".ccs.win.svsig.gz --log-level INFO -s $SAMPLE
-tabix -c '#' -s 3 -b 4 -e 4 $SV_DIR/"$SAMPLE".ccs.win.svsig.gz
-pbsv call $GENOME $SV_DIR/"$SAMPLE".ccs.win.svsig.gz $SV_DIR/"$SAMPLE".ccs.win.vcf --ccs -j $CPU --log-level INFO
+#pbsv discover "$ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.bam" $SV_DIR/"$SAMPLE".ccs.win.svsig.gz --log-level INFO -s $SAMPLE
+#tabix -c '#' -s 3 -b 4 -e 4 $SV_DIR/"$SAMPLE".ccs.win.svsig.gz
+#pbsv call $GENOME $SV_DIR/"$SAMPLE".ccs.win.svsig.gz $SV_DIR/"$SAMPLE".ccs.win.vcf --ccs -j $CPU --log-level INFO

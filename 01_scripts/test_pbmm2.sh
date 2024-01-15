@@ -27,13 +27,13 @@ fi
 #pbmm2 index $GENOME 03_genome/genome.fasta.mmi
 
 # 1. Run pbmm2, sort and indem bam output
-#pbmm2 align $GENOME $CCS_BAM $ALIGNED_DIR/pbmm2/"$SAMPLE".ccs.bam --sort --sample $SAMPLE --bam-index BAI --preset CCS -j $(($CPU / 2)) -J $(($CPU / 2)) --log-level TRACE
+pbmm2 align $GENOME $CCS_BAM $ALIGNED_DIR/pbmm2/"$SAMPLE".ccs.bam --sort --sample $SAMPLE --bam-index BAI --preset CCS -j $(($CPU / 2)) -J $(($CPU / 2)) --log-level WARN
 
 
 
 # try with subreads
-pbmm2 align $GENOME $SUBREADS_BAM $ALIGNED_DIR/pbmm2/"$SAMPLE".subreads.bam --sort --sample $SAMPLE --bam-index BAI --preset SUBREAD -j $(($CPU / 2)) -J $(($CPU / 2)) --log-level TRACE
+#pbmm2 align $GENOME $SUBREADS_BAM $ALIGNED_DIR/pbmm2/"$SAMPLE".subreads.bam --sort --sample $SAMPLE --bam-index BAI --preset SUBREAD -j $(($CPU / 2)) -J $(($CPU / 2)) --log-level TRACE
 
 # try with trimmed subreads 
-pbmm2 align $GENOME QC/longQC/$SAMPLE/"$SAMPLE".subreads.trimmed.fastq $ALIGNED_DIR/pbmm2/"$SAMPLE".subreads.trimmed.bam --sort --sample $SAMPLE --bam-index BAI --preset SUBREAD -j $(($CPU / 2)) -J $(($CPU / 2)) --log-level TRACE
+#pbmm2 align $GENOME QC/longQC/$SAMPLE/"$SAMPLE".subreads.trimmed.fastq $ALIGNED_DIR/pbmm2/"$SAMPLE".subreads.trimmed.bam --sort --sample $SAMPLE --bam-index BAI --preset SUBREAD -j $(($CPU / 2)) -J $(($CPU / 2)) --log-level TRACE
 
