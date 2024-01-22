@@ -17,7 +17,7 @@ SUBREADS_BAM="$RAW_DATA_DIR/"$SAMPLE".subreads.bam"
 
 ALIGNED_DIR="06_aligned"
 
-CPU=6
+CPU=8
 
 # LOAD REQUIRED MODULES
 # module load winnowmap
@@ -30,12 +30,12 @@ fi
 
 # O. Convert to bam
 # CCS
-pbindex $CCS_BAM
-bam2fasta -o $RAW_DATA_DIR/"$SAMPLE".ccs $CCS_BAM -p "$SAMPLE"
+#pbindex $CCS_BAM
+#bam2fasta -o $RAW_DATA_DIR/"$SAMPLE".ccs $CCS_BAM -p "$SAMPLE"
 
 # SUBREADS
-pbindex $SUBREADS_BAM
-bam2fasta -o $RAW_DATA_DIR/"$SAMPLE".subreads $SUBREADS_BAM -p "$SAMPLE"
+#pbindex $SUBREADS_BAM
+#bam2fasta -o $RAW_DATA_DIR/"$SAMPLE".subreads $SUBREADS_BAM -p "$SAMPLE"
 
 # 1. Pre-computing high frequency k-mers (e.g., top 0.02% most frequent) in a reference with meryl
 #meryl count k=15 output $ALIGNED_DIR/winnowmap/merylDB $GENOME threads=$CPU
@@ -43,17 +43,25 @@ bam2fasta -o $RAW_DATA_DIR/"$SAMPLE".subreads $SUBREADS_BAM -p "$SAMPLE"
 
 
 # 2. Run winnowmap on CCS
-winnowmap -t $CPU --MD --cs -W $ALIGNED_DIR/winnowmap/repetitive_k15.txt -ax map-pb $GENOME $RAW_DATA_DIR/"$SAMPLE".ccs.fasta.gz > $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.sam
+winnowmap -t $CPU --MD --cs -W $ALIGNED_DIR/winnowmap/repetitive_k15.txt -a -x map-pb -Y -R "@RG\tID:$SAMPLE\tSM:$SAMPLE" $GENOME $RAW_DATA_DIR/"$SAMPLE".ccs.fasta.gz > $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.sam
 
 # Convert to bam and sort 
-samtools view -b $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.sam | samtools sort > $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.bam
+samtools view -b $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.sam --threads $CPU | samtools sort --threads $CPU > $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.bam
 #rm $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.sam
 
 
 # 3. Run winnowmap on SUBREADS
-winnowmap -t $CPU --MD --cs -W $ALIGNED_DIR/winnowmap/repetitive_k15.txt -ax map-pb $GENOME $RAW_DATA_DIR/"$SAMPLE".subreads.fasta.gz > $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.sam
+winnowmap -t $CPU --MD --cs -W $ALIGNED_DIR/winnowmap/repetitive_k15.txt -a -x map-pb -Y -R "@RG\tID:$SAMPLE\tSM:$SAMPLE" $GENOME $RAW_DATA_DIR/"$SAMPLE".subreads.fasta.gz > $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.sam
 
 # Convert to bam and sort 
-samtools view -b $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.sam | samtools sort > $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.bam
+samtools view -b $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.sam --threads $CPU | samtools sort --threads $CPU > $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.bam
 #rm $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.sam
+
+
+# 3. Run winnowmap on TRIMMED SUBREADS
+winnowmap -t $CPU --MD --cs -W $ALIGNED_DIR/winnowmap/repetitive_k15.txt -a -x map-pb -Y -R "@RG\tID:$SAMPLE\tSM:$SAMPLE" $GENOME "QC/longQC/$SAMPLE/"$SAMPLE".subreads.trimmed.fastq" > $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.trimmed.sam
+
+# Convert to bam and sort 
+samtools view -b $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.trimmed.sam --threads $CPU | samtools sort --threads $CPU > $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.trimmed.bam 
+#rm $ALIGNED_DIR/winnowmap/"$SAMPLE".subreads.trimmed.sam
 
