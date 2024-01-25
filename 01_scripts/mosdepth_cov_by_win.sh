@@ -25,18 +25,21 @@ WINDOW=1000000
 CPU=4
 
 #mosdepth -n --by $WINDOW -t $CPU --thresholds 5,10,20 $COV_DIR/"$SAMPLE".ccs.pbmm2.cov.txt $CCS_PBMM 
-mosdepth -n -b $WINDOW -t $CPU $COV_DIR/pbmm2/"$SAMPLE".ccs.pbmm2.cov_win1Mb $CCS_PBMM 
+#mosdepth -n -b $WINDOW -t $CPU $COV_DIR/pbmm2/"$SAMPLE".ccs.pbmm2.cov_win1Mb $CCS_PBMM 
 
 #mosdepth -b $WINDOW -t $CPU --thresholds 1,5,10,20 $COV_DIR/"$SAMPLE".ccs.winnow.cov.txt $CCS_WIN
-mosdepth -n -b $WINDOW -t $CPU $COV_DIR/winnowmap/"$SAMPLE".ccs.winnow.cov_win1Mb $CCS_WIN
+#samtools index $CCS_WIN
+#mosdepth -n -b $WINDOW -t $CPU $COV_DIR/winnowmap/"$SAMPLE".ccs.winnow.cov_win1Mb $CCS_WIN
 
 #mosdepth -n --by $WINDOW -t $CPU --thresholds 1,5,10,20 $COV_DIR/"$SAMPLE".subreads.pbmm2.cov.txt $SUBREADS_PBMM 
 mosdepth -n -b $WINDOW -t $CPU $COV_DIR/pbmm2/"$SAMPLE".subreads.pbmm2.cov_win1Mb $SUBREADS_PBMM 
 
 #mosdepth -b $WINDOW -t $CPU --thresholds 1,5,10,20 $COV_DIR/"$SAMPLE".subreads.winnow.cov.txt $SUBREADS_WIN
-mosdepth -n -b $WINDOW -t $CPU $COV_DIR/winnowmap/"$SAMPLE".subreads.winnow.cov_win1Mb $SUBREADS_WIN
+#samtools index $SUBREADS_WIN
+#mosdepth -n -b $WINDOW -t $CPU $COV_DIR/winnowmap/"$SAMPLE".subreads.winnow.cov_win1Mb $SUBREADS_WIN
 
 #mosdepth -n --by $WINDOW -t $CPU --thresholds 1,5,10,20 $COV_DIR/"$SAMPLE".subreads.pbmm2.cov.txt $SUBREADS_TRIM
-mosdepth -n -b $WINDOW -t $CPU $COV_DIR/pbmm2/"$SAMPLE".subreads.pbmm2.cov.txt $SUBREADS_TRIM
+samtools index $SUBREADS_TRIM
+mosdepth -n -b $WINDOW -t $CPU $COV_DIR/pbmm2/"$SAMPLE".subreads.trimmed.pbmm2.cov.txt $SUBREADS_TRIM
 
  
