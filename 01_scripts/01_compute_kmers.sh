@@ -1,13 +1,13 @@
 #!/bin/bash 
 
 # Pre-computing high frequency k-mers (e.g., top 0.02% most frequent) in a reference with meryl
-# Launch in a conda env where Winnowmap has been installed, or load required modules/wheels
+# Launch in a conda env where winnowmap 2.02, smrtlink-tools 10.1.0 and samtools 1.15 have been installed, or load required modules/wheels
 
 # manitou
-# srun -p medium -c 4 --time=7-00:00 -J compute_kmers --mem=70G -o log/compute_kmers_%j.log 01_scripts/compute_kmers.sh &
+# srun -p medium -c 4 --time=7-00:00 -J 01_compute_kmers --mem=70G -o log/01_compute_kmers_%j.log 01_scripts/01_compute_kmers.sh &
 
 # valeria
-# srun -p ibis_medium -c 4 --time=7-00:00 -J compute_kmers --mem=70G -o log/compute_kmers_%j.log 01_scripts/compute_kmers.sh &
+# srun -p ibis_medium -c 4 --time=7-00:00 -J 01_compute_kmers --mem=70G -o log/01_compute_kmers_%j.log 01_scripts/01_compute_kmers.sh &
 
 # VARIABLES
 SAMPLE=$1
