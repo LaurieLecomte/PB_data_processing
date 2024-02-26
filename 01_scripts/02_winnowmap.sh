@@ -40,7 +40,7 @@ bam2fasta -o $RAW_DATA_DIR/"$SAMPLE".ccs $CCS_BAM -p "$SAMPLE"
 winnowmap -t $CPU --MD --cs -W $ALIGNED_DIR/repetitive_k15.txt -a -x map-pb -Y -R "@RG\tID:$SAMPLE\tSM:$SAMPLE" $GENOME $RAW_DATA_DIR/"$SAMPLE".ccs.fasta.gz > $ALIGNED_DIR/"$SAMPLE".ccs.sam
 
 # Convert to bam, sort and index 
-samtools sort --threads $CPU  $ALIGNED_DIR/"$SAMPLE".ccs.sam -o $ALIGNED_DIR/winnowmap/"$SAMPLE".ccs.bam
+samtools sort --threads $CPU  $ALIGNED_DIR/"$SAMPLE".ccs.sam -o $ALIGNED_DIR/"$SAMPLE".ccs.bam
 samtools index $ALIGNED_DIR/"$SAMPLE".ccs.bam
 
 
